@@ -1,0 +1,6 @@
+{
+    "require": {
+        "pear/html_quickform2": "^2.3",
+        "datatables/datatables": "^1.10"
+    }
+}
