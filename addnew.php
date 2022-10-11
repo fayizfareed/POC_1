@@ -11,16 +11,16 @@ require __DIR__ . '/db.php';
 $form = new HTML_QuickForm2('tutorial');
 
 // Set defaults for the form elements
-$form->addDataSource(new HTML_QuickForm2_DataSource_Array([
-    'name' => 'Joe User'
-]));
+// $form->addDataSource(new HTML_QuickForm2_DataSource_Array([
+//     'name' => 'Joe User'
+// ]));
 
 // Add some elements to the form
 $fieldset = $form->addElement('fieldset')->setLabel('Basic User Info');
 $firstname = $fieldset->addElement('text', 'firstname', ['size' => 50, 'maxlength' => 200])->setLabel('First Name:');
 $lastname = $fieldset->addElement('text', 'lastname', ['size' => 50, 'maxlength' => 200])->setLabel('Last Name:');
 $email = $fieldset->addElement('text', 'emailaddresss', ['size' => 50, 'maxlength' => 200])->setLabel('Email:');
-$fieldset->addElement('submit', null, ['value' => 'Send!']);
+$fieldset->addElement('submit', null, ['value' => 'Save']);
 
 // Define filters and validation rules
 $firstname->addFilter('trim');
@@ -43,23 +43,26 @@ if ($form->validate()) {
         $lname = $lastname->getValue();
         $mail = $email->getValue();
         $conn_string = "host=localhost port=5432 dbname=".$dbname." user=".$dbusername." password=".$dbpassword;
-        $query1 = "Insert Into user_info (first_name, last_name, mail_address) VALUES ('. $fname.','. $lname .','. $mail .')";
+        $query1 = "Insert Into user_info (first_name, last_name, mail_address) VALUES ($1,$2,$3)";
         $conn = pg_connect($conn_string);
-        if (pg_send_query($conn, $query1)) {
+        if (pg_send_query_params($conn, $query1, array( $fname, $lname, $mail))) {
             $res=pg_get_result($conn);
             if ($res) {
               $state = pg_result_error_field($res, PGSQL_DIAG_SQLSTATE);
               if ($state==0) {
-                echo "<a href='/'>Home</a>&nbsp;&nbsp;&nbsp;". "<a href='/addnew.php'>Back</a><br><br><br>". "Data Added To Database Successfully";
+                echo file_get_contents("html/validation_header.html");
+                echo "Data Added To Database Successfully";
               }
               else {
                 // some error happened
                 if ($state=="23505") { 
-                    echo "<a href='/'>Home</a>&nbsp;&nbsp;&nbsp;". "<a href='/addnew.php'>Back</a><br><br><br>". "You Must Type Unique Email Address";
+                    echo file_get_contents("html/validation_header.html");
+                    echo "You Must Type Unique Email Address";
                   // process specific error
                 }
                 else {
-                    echo "<a href='/'>Home</a>&nbsp;&nbsp;&nbsp;". "<a href='/addnew.php'>Back</a><br><br><br>". "Something Went Wrong while processing data";
+                    echo file_get_contents("html/validation_header.html");
+                    echo "Something Went Wrong while processing data";
                 }
               }
             }  
@@ -73,4 +76,5 @@ if ($form->validate()) {
 }
 
 // Output the form
-echo "<a href='/'>Home</a>&nbsp;&nbsp;&nbsp;". "<br><br><br>". $form;
+echo file_get_contents("html/header1.html");
+echo $form;

@@ -5,7 +5,7 @@
 -- Dumped from database version 14.5
 -- Dumped by pg_dump version 14.5
 
--- Started on 2022-10-08 11:03:16
+-- Started on 2022-10-11 18:20:12
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -32,7 +32,7 @@ CREATE TABLE public.user_info (
     first_name character varying(200) NOT NULL,
     last_name character varying(200) NOT NULL,
     mail_address character varying(200) NOT NULL,
-    creation_date timestamp without time zone DEFAULT CURRENT_TIMESTAMP
+    creation_date date DEFAULT CURRENT_TIMESTAMP
 );
 
 
@@ -54,7 +54,7 @@ CREATE SEQUENCE public.user_info_id_seq
 ALTER TABLE public.user_info_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3316 (class 0 OID 0)
+-- TOC entry 3314 (class 0 OID 0)
 -- Dependencies: 209
 -- Name: user_info_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -68,25 +68,6 @@ ALTER SEQUENCE public.user_info_id_seq OWNED BY public.user_info.id;
 --
 
 ALTER TABLE ONLY public.user_info ALTER COLUMN id SET DEFAULT nextval('public.user_info_id_seq'::regclass);
-
-
---
--- TOC entry 3310 (class 0 OID 20491)
--- Dependencies: 210
--- Data for Name: user_info; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-COPY public.user_info (id, first_name, last_name, mail_address, creation_date) FROM stdin;
-\.
-
-
---
--- TOC entry 3317 (class 0 OID 0)
--- Dependencies: 209
--- Name: user_info_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('public.user_info_id_seq', 1, false);
 
 
 --
@@ -107,7 +88,7 @@ ALTER TABLE ONLY public.user_info
     ADD CONSTRAINT user_info_pkey PRIMARY KEY (id);
 
 
--- Completed on 2022-10-08 11:03:17
+-- Completed on 2022-10-11 18:20:12
 
 --
 -- PostgreSQL database dump complete
